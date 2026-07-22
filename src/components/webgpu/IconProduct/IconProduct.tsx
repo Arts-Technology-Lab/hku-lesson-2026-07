@@ -39,6 +39,7 @@ let repeat =
     }
 
 let t = tunnel()
+const noVideoThumbnail = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23000'/%3E%3C/svg%3E`
 
 export const IconProductHTML = () => {
     return (
@@ -97,7 +98,7 @@ export function IconProduct({
 
     let adsVideo = useVideoTexture(videoURL)
     let youtubeThumbnail = useTexture(
-        youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` : `/assets/texture/Chip001_1K-JPG/Chip001_1K-JPG_Color.jpg`,
+        youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` : noVideoThumbnail,
     )
     let mediaTexture = youtubeId ? youtubeThumbnail : adsVideo
 

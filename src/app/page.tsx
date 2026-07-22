@@ -73,11 +73,11 @@ function Content() {
                         {youtubeClipStarts.map((startTime, index) => {
                             const angle = (index / youtubeClipStarts.length) * Math.PI * 2
                             const minutes = Math.floor(startTime / 60)
-                            const seconds = `${startTime % 60}`.padStart(2, '0')
+                            const seconds = String(startTime % 60).padStart(2, '0')
 
                             return (
                                 <group
-                                    key={startTime}
+                                    key={`${startTime}-${index}`}
                                     position={[
                                         clipCircleCenter[0] + Math.cos(angle) * clipCircleRadius,
                                         0,
