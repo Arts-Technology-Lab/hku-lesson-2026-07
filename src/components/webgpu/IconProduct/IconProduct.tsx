@@ -39,7 +39,7 @@ let repeat =
     }
 
 let t = tunnel()
-const noVideoThumbnail = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23000'/%3E%3C/svg%3E`
+const FALLBACK_THUMBNAIL = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23000'/%3E%3C/svg%3E`
 
 export const IconProductHTML = () => {
     return (
@@ -60,6 +60,10 @@ export function IconProduct({
     youtubeId = '',
     startTime = 0,
 }) {
+    const safeYoutubeId = /^[a-zA-Z0-9_-]{11}$/.test(youtubeId) ? youtubeId : ''
+    const isYouTube = Boolean(safeYoutubeId)
+    const numericStartTime = Number(startTime)
+    const safeStartTime = Number.isFinite(numericStartTime) && numericStartTime >= 0 ? Math.floor(numericStartTime) : 0
     // let images = {
     //     tvWood: useTexture(`/assets/texture/7fec2fef-0329-4920-a531-4c925c67f2ea.png`, repeat(1)),
     //     motherboard1: useTexture(`/assets/texture/f29f5990-bd71-4832-8e75-6448b46b231c.png`, repeat(10)),
@@ -98,14 +102,14 @@ export function IconProduct({
 
     let adsVideo = useVideoTexture(videoURL)
     let youtubeThumbnail = useTexture(
-        youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` : noVideoThumbnail,
+        isYouTube ? `https://i.ytimg.com/vi/${safeYoutubeId}/hqdefault.jpg` : FALLBACK_THUMBNAIL,
     )
-    let mediaTexture = youtubeId ? youtubeThumbnail : adsVideo
+    let mediaTexture = isYouTube ? youtubeThumbnail : adsVideo
 
     let [modalOpen, setModalOpen] = useState(false)
     let [aspect, setAspect] = useState(1)
     useEffect(() => {
-        if (youtubeId) {
+        if (isYouTube) {
             let image = youtubeThumbnail.image as HTMLImageElement
             if (image?.naturalWidth && image?.naturalHeight) {
                 setAspect(image.naturalWidth / image.naturalHeight)
@@ -120,7 +124,7 @@ export function IconProduct({
         adsVideo.image.play()
         let aspectLocal = adsVideo.image.videoWidth / adsVideo.image.videoHeight
         setAspect(aspectLocal)
-    }, [adsVideo, youtubeId, youtubeThumbnail])
+    }, [adsVideo, isYouTube, youtubeThumbnail])
 
     useEffect(() => {
         if (!modalOpen) return
@@ -194,10 +198,10 @@ export function IconProduct({
                                 </div>
                             )}
 
-                            {youtubeId ? (
+                            {isYouTube ? (
                                 <iframe
                                     className='w-full h-full bg-black'
-                                    src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&start=${startTime}&rel=0`}
+                                    src={`https://www.youtube-nocookie.com/embed/${safeYoutubeId}?autoplay=1&start=${safeStartTime}&rel=0`}
                                     title={title}
                                     allow='autoplay; encrypted-media; picture-in-picture'
                                     allowFullScreen

@@ -13,9 +13,9 @@ import { FloorContent } from '@/components/webgpu/InstructionMesh/FloorContent'
 // import { ParticleAnim } from '@/components/webgpu/ParticleAnim/ParticleAnim'
 import { Guide } from '@/components/webgpu/Guide/Guide'
 
-const youtubeClipStarts = [10, 34, 62, 64, 70, 83, 99, 110, 120]
-const clipCircleCenter: [number, number] = [20, 5]
-const clipCircleRadius = 25
+const YOUTUBE_CLIP_START_TIMES = [10, 34, 62, 64, 70, 83, 99, 110, 120]
+const CLIP_CIRCLE_CENTER: [number, number] = [20, 5]
+const CLIP_CIRCLE_RADIUS = 25
 
 export default function Page() {
     return (
@@ -70,8 +70,8 @@ function Content() {
                     )}
 
                     <Suspense fallback={null}>
-                        {youtubeClipStarts.map((startTime, index) => {
-                            const angle = (index / youtubeClipStarts.length) * Math.PI * 2
+                        {YOUTUBE_CLIP_START_TIMES.map((startTime, index) => {
+                            const angle = (index / YOUTUBE_CLIP_START_TIMES.length) * Math.PI * 2
                             const minutes = Math.floor(startTime / 60)
                             const paddedSeconds = String(startTime % 60).padStart(2, '0')
 
@@ -79,9 +79,9 @@ function Content() {
                                 <group
                                     key={index}
                                     position={[
-                                        clipCircleCenter[0] + Math.cos(angle) * clipCircleRadius,
+                                        CLIP_CIRCLE_CENTER[0] + Math.cos(angle) * CLIP_CIRCLE_RADIUS,
                                         0,
-                                        clipCircleCenter[1] + Math.sin(angle) * clipCircleRadius,
+                                        CLIP_CIRCLE_CENTER[1] + Math.sin(angle) * CLIP_CIRCLE_RADIUS,
                                     ]}
                                     rotation={[0, -angle - Math.PI / 2, 0]}
                                 >
