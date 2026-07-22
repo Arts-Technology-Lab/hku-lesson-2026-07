@@ -73,11 +73,11 @@ function Content() {
                         {youtubeClipStarts.map((startTime, index) => {
                             const angle = (index / youtubeClipStarts.length) * Math.PI * 2
                             const minutes = Math.floor(startTime / 60)
-                            const seconds = String(startTime % 60).padStart(2, '0')
+                            const paddedSeconds = String(startTime % 60).padStart(2, '0')
 
                             return (
                                 <group
-                                    key={`${startTime}-${index}`}
+                                    key={index}
                                     position={[
                                         clipCircleCenter[0] + Math.cos(angle) * clipCircleRadius,
                                         0,
@@ -87,7 +87,7 @@ function Content() {
                                 >
                                     <IconProduct
                                         color='#ffffff'
-                                        title={`Clip ${minutes}:${seconds}`}
+                                        title={`Clip ${minutes}:${paddedSeconds}`}
                                         youtubeId='NxtnyNLIe44'
                                         startTime={startTime}
                                     />
