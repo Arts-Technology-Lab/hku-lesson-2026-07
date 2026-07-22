@@ -13,6 +13,10 @@ import { FloorContent } from '@/components/webgpu/InstructionMesh/FloorContent'
 // import { ParticleAnim } from '@/components/webgpu/ParticleAnim/ParticleAnim'
 import { Guide } from '@/components/webgpu/Guide/Guide'
 
+const youtubeClipStarts = [10, 34, 62, 64, 70, 83, 99, 110, 120]
+const clipCircleCenter: [number, number] = [20, 5]
+const clipCircleRadius = 25
+
 export default function Page() {
     return (
         <>
@@ -66,48 +70,30 @@ function Content() {
                     )}
 
                     <Suspense fallback={null}>
-                        <group position={[5, 0, 0]} rotation={[0, 0.25 * Math.PI, 0]}>
-                            <IconProduct
-                                color='#ffffff'
-                                title='Welcome!'
-                                videoURL={`/products/lambo/lambo-genie.mp4`}
-                                qrLink={`https://video.loklok.org`}
-                            ></IconProduct>
-                        </group>
+                        {youtubeClipStarts.map((startTime, index) => {
+                            const angle = (index / youtubeClipStarts.length) * Math.PI * 2
+                            const minutes = Math.floor(startTime / 60)
+                            const seconds = `${startTime % 60}`.padStart(2, '0')
 
-                        <group position={[15, 0, -5]} rotation={[0, 0.0 * Math.PI, 0]}>
-                            <IconProduct
-                                color='#ffffff'
-                                title='Turtle & Rabbit'
-                                videoURL={`/products/lambo/rabbit-turtle.mp4`}
-                            ></IconProduct>
-                        </group>
-
-                        <group position={[25, 0, -5]} rotation={[0, 0.0 * Math.PI, 0]}>
-                            <IconProduct
-                                color='#ffffff'
-                                title='3 Little Pigs'
-                                videoURL={`/products/lambo/three-pigs-480p.mov`}
-                            ></IconProduct>
-                        </group>
-
-                        <group position={[35, 0, 0]} rotation={[0, -0.25 * Math.PI, 0]}>
-                            <IconProduct
-                                color='#ffffff'
-                                title='Immserive Video Site'
-                                videoURL={`/products/lambo/scroll-web.mp4`}
-                                qrLink={`https://github.com/wonglok/lok-web-scroll`}
-                            ></IconProduct>
-                        </group>
-
-                        <group position={[35, 0, 25]} rotation={[0, Math.PI * (-0.25 - 0.5), 0]}>
-                            <IconProduct
-                                color='#ffffff'
-                                title='Sleepy Lamb'
-                                videoURL={`/products/lambo/sleepylamb.mp4`}
-                                qrLink={`https://github.com/wonglok/lok-web-scroll`}
-                            ></IconProduct>
-                        </group>
+                            return (
+                                <group
+                                    key={startTime}
+                                    position={[
+                                        clipCircleCenter[0] + Math.cos(angle) * clipCircleRadius,
+                                        0,
+                                        clipCircleCenter[1] + Math.sin(angle) * clipCircleRadius,
+                                    ]}
+                                    rotation={[0, -angle - Math.PI / 2, 0]}
+                                >
+                                    <IconProduct
+                                        color='#ffffff'
+                                        title={`Clip ${minutes}:${seconds}`}
+                                        youtubeId='NxtnyNLIe44'
+                                        startTime={startTime}
+                                    />
+                                </group>
+                            )
+                        })}
 
                         {/* public/products/lambo/sleepylamb.mp4 */}
 

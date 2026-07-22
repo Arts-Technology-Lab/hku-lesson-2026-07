@@ -56,6 +56,8 @@ export function IconProduct({
     title = 'Demo video',
     videoURL = `/products/lambo/lambo-genie.mp4`,
     qrLink = '',
+    youtubeId = '',
+    startTime = 0,
 }) {
     // let images = {
     //     tvWood: useTexture(`/assets/texture/7fec2fef-0329-4920-a531-4c925c67f2ea.png`, repeat(1)),
@@ -94,10 +96,21 @@ export function IconProduct({
     //
 
     let adsVideo = useVideoTexture(videoURL)
+    let youtubeThumbnail = useTexture(
+        youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` : `/assets/texture/Chip001_1K-JPG/Chip001_1K-JPG_Color.jpg`,
+    )
+    let mediaTexture = youtubeId ? youtubeThumbnail : adsVideo
 
     let [modalOpen, setModalOpen] = useState(false)
     let [aspect, setAspect] = useState(1)
     useEffect(() => {
+        if (youtubeId) {
+            let image = youtubeThumbnail.image as HTMLImageElement
+            if (image?.naturalWidth && image?.naturalHeight) {
+                setAspect(image.naturalWidth / image.naturalHeight)
+            }
+            return
+        }
         if (!adsVideo?.image) return
         adsVideo.image.loop = true
         adsVideo.image.muted = true
@@ -106,7 +119,7 @@ export function IconProduct({
         adsVideo.image.play()
         let aspectLocal = adsVideo.image.videoWidth / adsVideo.image.videoHeight
         setAspect(aspectLocal)
-    }, [adsVideo])
+    }, [adsVideo, youtubeId, youtubeThumbnail])
 
     useEffect(() => {
         if (!modalOpen) return
@@ -155,9 +168,9 @@ export function IconProduct({
 
     const emissiveNode = useMemo(() => {
         return Fn(() => {
-            return texture(adsVideo, uv())
+            return texture(mediaTexture, uv())
         })()
-    }, [adsVideo])
+    }, [mediaTexture])
 
     return (
         <>
@@ -180,7 +193,17 @@ export function IconProduct({
                                 </div>
                             )}
 
-                            <video src={videoURL} className='w-full h-full object-contain bg-black' controls autoPlay />
+                            {youtubeId ? (
+                                <iframe
+                                    className='w-full h-full bg-black'
+                                    src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&start=${startTime}&rel=0`}
+                                    title={title}
+                                    allow='autoplay; encrypted-media; picture-in-picture'
+                                    allowFullScreen
+                                />
+                            ) : (
+                                <video src={videoURL} className='w-full h-full object-contain bg-black' controls autoPlay />
+                            )}
                             <button
                                 className='absolute top-1 right-1 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-red-500/50 hover:bg-red/20 text-white transition-colors cursor-pointer'
                                 onClick={() => setModalOpen(false)}
