@@ -39,7 +39,7 @@ let repeat =
     }
 
 let t = tunnel()
-const FALLBACK_THUMBNAIL = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23000'/%3E%3C/svg%3E`
+const FALLBACK_THUMBNAIL = '/assets/video-thumbnail-placeholder.svg'
 
 export const IconProductHTML = () => {
     return (
@@ -64,6 +64,10 @@ export function IconProduct({
     const isYouTube = Boolean(safeYoutubeId)
     const numericStartTime = Number(startTime)
     const safeStartTime = Number.isFinite(numericStartTime) && numericStartTime >= 0 ? Math.floor(numericStartTime) : 0
+    const thumbnailURL = useMemo(
+        () => (isYouTube ? `https://i.ytimg.com/vi/${safeYoutubeId}/hqdefault.jpg` : FALLBACK_THUMBNAIL),
+        [isYouTube, safeYoutubeId],
+    )
     // let images = {
     //     tvWood: useTexture(`/assets/texture/7fec2fef-0329-4920-a531-4c925c67f2ea.png`, repeat(1)),
     //     motherboard1: useTexture(`/assets/texture/f29f5990-bd71-4832-8e75-6448b46b231c.png`, repeat(10)),
@@ -101,9 +105,7 @@ export function IconProduct({
     //
 
     let adsVideo = useVideoTexture(videoURL)
-    let youtubeThumbnail = useTexture(
-        isYouTube ? `https://i.ytimg.com/vi/${safeYoutubeId}/hqdefault.jpg` : FALLBACK_THUMBNAIL,
-    )
+    let youtubeThumbnail = useTexture(thumbnailURL)
     let mediaTexture = isYouTube ? youtubeThumbnail : adsVideo
 
     let [modalOpen, setModalOpen] = useState(false)

@@ -87,7 +87,7 @@ function Content() {
                                 >
                                     <IconProduct
                                         color='#ffffff'
-                                        title={`Clip ${minutes}:${paddedSeconds}`}
+                                        title={`Lesson at ${minutes}:${paddedSeconds}`}
                                         youtubeId='NxtnyNLIe44'
                                         startTime={startTime}
                                     />
